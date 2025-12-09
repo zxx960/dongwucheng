@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nano Banana AI 图片生成</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 100px;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .row .form-group {
+            flex: 1;
+        }
+
+        .upload-area {
+            border: 2px dashed #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #fafafa;
+        }
+
+        .upload-area:hover {
+            border-color: #667eea;
+            background: #f0f0ff;
+        }
+
+        .upload-area.has-image {
+            padding: 10px;
+        }
+
+        .upload-area p {
+            color: #888;
+            margin-top: 10px;
+        }
+
+        .preview-grid {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .preview-item {
+            position: relative;
+            display: inline-block;
+        }
+
+        .preview-item img {
+            max-width: 150px;
+            max-height: 150px;
+            border-radius: 4px;
+            object-fit: cover;
+        }
+
+        .preview-item .remove-btn {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 20px;
+            height: 20px;
+            background: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 12px;
+            line-height: 20px;
+            text-align: center;
+        }
+
+        .preview-item .remove-btn:hover {
+            background: #cc0000;
+        }
+
+        .upload-hint {
+            color: #888;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .progress-container {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 10px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .result-container {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .result-image {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .result-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-secondary {
+            flex: 1;
+            padding: 10px;
+            background: #f0f0f0;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c00;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .clear-ref {
+            display: inline-block;
+            margin-top: 10px;
+            color: #667eea;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .clear-ref:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍌 Nano Banana AI 图片生成</h1>
+
+        <div class="form-group">
+            <label>提示词 *</label>
+            <textarea id="prompt" placeholder="描述你想生成的图片，例如：一只可爱的猫咪在草地上玩耍"></textarea>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label>模型</label>
+                <select id="model">
+                    <option value="nano-banana-pro">nano-banana-pro (专业)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>图片比例</label>
+                <select id="aspectRatio">
+                    <option value="auto">自动</option>
+                    <option value="1:1">1:1 (正方形)</option>
+                    <option value="16:9">16:9 (横屏)</option>
+                    <option value="9:16">9:16 (竖屏)</option>
+                    <option value="4:3">4:3</option>
+                    <option value="3:4">3:4</option>
+                    <option value="3:2">3:2</option>
+                    <option value="2:3">2:3</option>
+                    <option value="21:9">21:9 (超宽)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group" id="imageSizeGroup">
+            <label>图片尺寸</label>
+            <select id="imageSize">
+                <option value="1K">1K</option>
+                <option value="2K">2K</option>
+                <option value="4K">4K</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>参考图片 (可选，最多3张)</label>
+            <div class="upload-area" id="uploadArea">
+                <p>📷 点击或拖拽上传参考图片</p>
+            </div>
+            <input type="file" id="fileInput" accept="image/*" multiple>
+            <div class="upload-hint" id="uploadHint"></div>
+            <span class="clear-ref" id="clearRef" style="display:none;">✕ 清除全部参考图</span>
+        </div>
+
+        <button class="btn" id="generateBtn">生成图片</button>
+
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">准备中...</div>
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+
+        <div class="result-container" id="resultContainer">
+            <img class="result-image" id="resultImage" src="" alt="生成的图片">
+            <div class="result-actions">
+                <button class="btn-secondary" onclick="downloadImage()">下载图片</button>
+                <button class="btn-secondary" onclick="openInNewTab()">新标签打开</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_HOST = 'https://api.aiit.pw';
+        const API_KEY = 'sk-8c083ac2e9cc46c4b30e0a4e182d0811';
+
+        let referenceImages = []; // 存储多张参考图
+        const MAX_IMAGES = 3;
+        let generatedImageUrl = null;
+
+
+        // 上传区域点击
+        document.getElementById('uploadArea').addEventListener('click', () => {
+            document.getElementById('fileInput').click();
+        });
+
+        // 拖拽上传
+        const uploadArea = document.getElementById('uploadArea');
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#667eea';
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.borderColor = '#e0e0e0';
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#e0e0e0';
+            const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+            handleMultipleImages(files);
+        });
+
+        // 文件选择
+        document.getElementById('fileInput').addEventListener('change', (e) => {
+            const files = Array.from(e.target.files);
+            handleMultipleImages(files);
+        });
+
+        // 处理多张图片上传
+        function handleMultipleImages(files) {
+            const remaining = MAX_IMAGES - referenceImages.length;
+            if (remaining <= 0) {
+                showError('最多只能上传3张参考图');
+                return;
+            }
+            const filesToProcess = files.slice(0, remaining);
+            
+            filesToProcess.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    referenceImages.push(e.target.result);
+                    updatePreview();
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // 更新预览
+        function updatePreview() {
+            if (referenceImages.length === 0) {
+                uploadArea.innerHTML = '<p>📷 点击或拖拽上传参考图片</p>';
+                uploadArea.classList.remove('has-image');
+                document.getElementById('clearRef').style.display = 'none';
+                document.getElementById('uploadHint').textContent = '';
+            } else {
+                let html = '<div class="preview-grid">';
+                referenceImages.forEach((img, index) => {
+                    html += `
+                        <div class="preview-item">
+                            <img src="${img}" alt="参考图${index + 1}">
+                            <button class="remove-btn" onclick="removeImage(${index}); event.stopPropagation();">✕</button>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                uploadArea.innerHTML = html;
+                uploadArea.classList.add('has-image');
+                document.getElementById('clearRef').style.display = 'inline-block';
+                document.getElementById('uploadHint').textContent = `已上传 ${referenceImages.length}/${MAX_IMAGES} 张`;
+            }
+        }
+
+        // 移除单张图片
+        function removeImage(index) {
+            referenceImages.splice(index, 1);
+            updatePreview();
+        }
+
+        // 清除全部参考图
+        document.getElementById('clearRef').addEventListener('click', () => {
+            referenceImages = [];
+            updatePreview();
+            document.getElementById('fileInput').value = '';
+        });
+
+        // 生成图片
+        document.getElementById('generateBtn').addEventListener('click', generateImage);
+
+        async function generateImage() {
+            const prompt = document.getElementById('prompt').value.trim();
+            if (!prompt) {
+                showError('请输入提示词');
+                return;
+            }
+
+            const model = document.getElementById('model').value;
+            const aspectRatio = document.getElementById('aspectRatio').value;
+            const imageSize = document.getElementById('imageSize').value;
+
+            const btn = document.getElementById('generateBtn');
+            const progressContainer = document.getElementById('progressContainer');
+            const resultContainer = document.getElementById('resultContainer');
+            const errorMessage = document.getElementById('errorMessage');
+
+            btn.disabled = true;
+            btn.textContent = '生成中...';
+            progressContainer.style.display = 'block';
+            resultContainer.style.display = 'none';
+            errorMessage.style.display = 'none';
+            updateProgress(0, '正在连接服务器...');
+
+            const requestBody = {
+                model: model,
+                prompt: prompt,
+                aspectRatio: aspectRatio
+            };
+
+            if (model === 'nano-banana-pro') {
+                requestBody.imageSize = imageSize;
+            }
+
+            if (referenceImages.length > 0) {
+                requestBody.urls = referenceImages;
+            }
+
+            try {
+                const response = await fetch(`${API_HOST}/v1/draw/nano-banana`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_KEY}`
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP错误: ${response.status}`);
+                }
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let buffer = '';
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split('\n');
+                    buffer = lines.pop();
+
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            const jsonStr = line.slice(6).trim();
+                            if (jsonStr && jsonStr !== '[DONE]') {
+                                try {
+                                    const data = JSON.parse(jsonStr);
+                                    handleStreamData(data);
+                                } catch (e) {
+                                    console.log('解析跳过:', jsonStr);
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (error) {
+                showError('生成失败: ' + error.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '生成图片';
+            }
+        }
+
+        function handleStreamData(data) {
+            if (data.progress !== undefined) {
+                const statusText = {
+                    'running': '生成中...',
+                    'succeeded': '生成完成！',
+                    'failed': '生成失败'
+                };
+                updateProgress(data.progress, statusText[data.status] || '处理中...');
+            }
+
+            if (data.status === 'failed') {
+                const reasons = {
+                    'output_moderation': '输出内容违规',
+                    'input_moderation': '输入内容违规',
+                    'error': '系统错误'
+                };
+                showError(reasons[data.failure_reason] || data.error || '生成失败');
+                return;
+            }
+
+            if (data.status === 'succeeded' && data.results && data.results.length > 0) {
+                generatedImageUrl = data.results[0].url;
+                showResult(generatedImageUrl);
+            }
+        }
+
+        function updateProgress(percent, text) {
+            document.getElementById('progressFill').style.width = percent + '%';
+            document.getElementById('progressText').textContent = `${text} (${percent}%)`;
+        }
+
+        function showError(message) {
+            const errorEl = document.getElementById('errorMessage');
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+            document.getElementById('progressContainer').style.display = 'none';
+        }
+
+        function showResult(url) {
+            document.getElementById('resultImage').src = url;
+            document.getElementById('resultContainer').style.display = 'block';
+            document.getElementById('progressContainer').style.display = 'none';
+        }
+
+        function downloadImage() {
+            if (generatedImageUrl) {
+                const a = document.createElement('a');
+                a.href = generatedImageUrl;
+                a.download = 'nano-banana-' + Date.now() + '.jpg';
+                a.target = '_blank';
+                a.click();
+            }
+        }
+
+        function openInNewTab() {
+            if (generatedImageUrl) {
+                window.open(generatedImageUrl, '_blank');
+            }
+        }
+    </script>
+</body>
+</html>
