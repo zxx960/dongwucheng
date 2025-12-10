@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nano Banana AI 图片生成</title>
+    <title>🦊 Nano Banana AI - 疯狂动物城</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
         * {
             margin: 0;
             padding: 0;
@@ -12,26 +13,119 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(180deg, #87CEEB 0%, #98D8C8 40%, #7CB342 100%);
             min-height: 100vh;
             padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* 疯狂动物城天际线 */
+        body::before {
+            content: '';
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 200px;
+            background: 
+                /* 建筑物剪影 */
+                linear-gradient(to bottom, transparent 60%, #2E7D32 60%),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 200'%3E%3Cpath fill='%234CAF50' d='M0,200 L0,120 L50,120 L50,80 L80,80 L80,100 L120,100 L120,60 L150,40 L180,60 L180,100 L220,100 L220,140 L280,140 L280,90 L320,90 L320,110 L360,110 L360,70 L400,50 L440,70 L440,130 L500,130 L500,80 L540,80 L540,100 L600,100 L600,60 L650,30 L700,60 L700,120 L760,120 L760,90 L800,90 L800,110 L860,110 L860,70 L900,70 L900,100 L960,100 L960,50 L1000,30 L1040,50 L1040,90 L1100,90 L1100,130 L1150,130 L1150,100 L1200,100 L1200,200 Z'/%3E%3C/svg%3E") no-repeat bottom center;
+            background-size: cover;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.3;
+        }
+
+        /* 漂浮的云朵动画 */
+        .cloud {
+            position: fixed;
+            background: white;
+            border-radius: 50px;
+            opacity: 0.8;
+            z-index: 0;
+            animation: float-cloud 20s linear infinite;
+        }
+        .cloud::before, .cloud::after {
+            content: '';
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+        }
+        .cloud-1 { width: 100px; height: 40px; top: 10%; left: -100px; animation-duration: 25s; }
+        .cloud-1::before { width: 50px; height: 50px; top: -25px; left: 15px; }
+        .cloud-1::after { width: 35px; height: 35px; top: -15px; left: 55px; }
+        .cloud-2 { width: 80px; height: 30px; top: 20%; left: -80px; animation-duration: 30s; animation-delay: 5s; }
+        .cloud-2::before { width: 40px; height: 40px; top: -20px; left: 10px; }
+        .cloud-2::after { width: 30px; height: 30px; top: -10px; left: 40px; }
+        .cloud-3 { width: 120px; height: 45px; top: 5%; left: -120px; animation-duration: 35s; animation-delay: 10s; }
+        .cloud-3::before { width: 60px; height: 60px; top: -30px; left: 20px; }
+        .cloud-3::after { width: 45px; height: 45px; top: -20px; left: 70px; }
+
+        @keyframes float-cloud {
+            from { transform: translateX(0); }
+            to { transform: translateX(calc(100vw + 200px)); }
         }
 
         .container {
             max-width: 800px;
             margin: 0 auto;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            background: linear-gradient(145deg, #FFF8E1 0%, #FFFFFF 100%);
+            border-radius: 24px;
+            box-shadow: 
+                0 20px 60px rgba(76, 175, 80, 0.3),
+                0 0 0 4px #FF9800,
+                0 0 0 8px #4CAF50;
             padding: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 动物脚印装饰 */
+        .container::before {
+            content: '🐾';
+            position: absolute;
+            top: -15px;
+            right: 30px;
+            font-size: 30px;
+            transform: rotate(15deg);
+        }
+        .container::after {
+            content: '🐾';
+            position: absolute;
+            bottom: -15px;
+            left: 30px;
+            font-size: 30px;
+            transform: rotate(-15deg);
         }
 
         h1 {
             text-align: center;
-            color: #333;
+            color: #2E7D32;
             margin-bottom: 30px;
-            font-size: 24px;
+            font-size: 28px;
+            font-weight: 800;
+            text-shadow: 2px 2px 0 #FFE082;
+            position: relative;
+        }
+        h1::before {
+            content: '🦊';
+            margin-right: 10px;
+        }
+        h1::after {
+            content: '🐰';
+            margin-left: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #FF9800;
+            font-size: 14px;
+            margin-top: -20px;
+            margin-bottom: 25px;
+            font-weight: 600;
         }
 
         .form-group {
@@ -41,39 +135,58 @@
         label {
             display: block;
             margin-bottom: 8px;
-            color: #555;
-            font-weight: 500;
+            color: #4CAF50;
+            font-weight: 700;
+            font-size: 15px;
         }
 
         textarea {
             width: 100%;
             padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
+            border: 3px solid #A5D6A7;
+            border-radius: 12px;
             font-size: 14px;
             resize: vertical;
             min-height: 100px;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
+            background: #FAFFF5;
+            font-family: inherit;
         }
 
         textarea:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #FF9800;
+            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.2);
         }
 
         select {
             width: 100%;
             padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
+            border: 3px solid #A5D6A7;
+            border-radius: 12px;
             font-size: 14px;
-            background: white;
+            background: #FAFFF5;
             cursor: pointer;
+            font-family: inherit;
+            font-weight: 600;
         }
 
         select:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #FF9800;
+            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.2);
+        }
+
+        input[type="password"] {
+            border: 3px solid #A5D6A7 !important;
+            border-radius: 12px !important;
+            background: #FAFFF5 !important;
+            font-family: inherit !important;
+        }
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #FF9800 !important;
+            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.2);
         }
 
         .row {
@@ -86,18 +199,20 @@
         }
 
         .upload-area {
-            border: 2px dashed #e0e0e0;
-            border-radius: 8px;
-            padding: 20px;
+            border: 3px dashed #A5D6A7;
+            border-radius: 16px;
+            padding: 25px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
-            background: #fafafa;
+            background: linear-gradient(135deg, #E8F5E9 0%, #FFF8E1 100%);
+            position: relative;
         }
 
         .upload-area:hover {
-            border-color: #667eea;
-            background: #f0f0ff;
+            border-color: #FF9800;
+            background: linear-gradient(135deg, #FFF8E1 0%, #FFE0B2 100%);
+            transform: scale(1.02);
         }
 
         .upload-area.has-image {
@@ -132,20 +247,22 @@
             position: absolute;
             top: -8px;
             right: -8px;
-            width: 20px;
-            height: 20px;
-            background: #ff4444;
+            width: 24px;
+            height: 24px;
+            background: #FF5722;
             color: white;
-            border: none;
+            border: 2px solid white;
             border-radius: 50%;
             cursor: pointer;
             font-size: 12px;
             line-height: 20px;
             text-align: center;
+            transition: all 0.2s;
         }
 
         .preview-item .remove-btn:hover {
-            background: #cc0000;
+            background: #D84315;
+            transform: scale(1.2);
         }
 
         .upload-hint {
@@ -160,27 +277,44 @@
 
         .btn {
             width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 16px;
+            background: linear-gradient(135deg, #FF9800 0%, #F57C00 50%, #FF5722 100%);
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 800;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '🎬';
+            margin-right: 8px;
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(255, 152, 0, 0.5);
+        }
+
+        .btn:active {
+            transform: translateY(0);
         }
 
         .btn:disabled {
-            background: #ccc;
+            background: linear-gradient(135deg, #BDBDBD 0%, #9E9E9E 100%);
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
+        }
+        .btn:disabled::before {
+            content: '⏳';
         }
 
         .progress-container {
@@ -190,17 +324,27 @@
 
         .progress-bar {
             width: 100%;
-            height: 8px;
-            background: #e0e0e0;
-            border-radius: 4px;
-            overflow: hidden;
+            height: 12px;
+            background: #E8F5E9;
+            border-radius: 10px;
+            overflow: visible;
+            border: 2px solid #A5D6A7;
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(90deg, #4CAF50 0%, #8BC34A 50%, #FF9800 100%);
             width: 0%;
             transition: width 0.3s;
+            border-radius: 10px;
+            position: relative;
+        }
+        .progress-fill::after {
+            content: '🚗';
+            position: absolute;
+            right: -5px;
+            top: -8px;
+            font-size: 16px;
         }
 
         .progress-text {
@@ -217,8 +361,17 @@
 
         .result-image {
             width: 100%;
-            border-radius: 8px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            border-radius: 16px;
+            box-shadow: 
+                0 10px 30px rgba(76, 175, 80, 0.3),
+                0 0 0 4px #4CAF50;
+            animation: pop-in 0.5s ease-out;
+        }
+
+        @keyframes pop-in {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
         }
 
         .result-actions {
@@ -229,46 +382,91 @@
 
         .btn-secondary {
             flex: 1;
-            padding: 10px;
-            background: #f0f0f0;
-            color: #333;
+            padding: 12px;
+            background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
+            color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 25px;
             font-size: 14px;
+            font-weight: 700;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s;
         }
 
         .btn-secondary:hover {
-            background: #e0e0e0;
+            background: linear-gradient(135deg, #388E3C 0%, #4CAF50 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
         }
 
         .error-message {
-            background: #fee;
-            color: #c00;
-            padding: 12px;
-            border-radius: 8px;
+            background: linear-gradient(135deg, #FFEBEE 0%, #FFCDD2 100%);
+            color: #C62828;
+            padding: 15px;
+            border-radius: 12px;
             margin-top: 20px;
             display: none;
+            border: 2px solid #EF9A9A;
+            font-weight: 600;
+        }
+        .error-message::before {
+            content: '🚨 ';
         }
 
         .clear-ref {
             display: inline-block;
             margin-top: 10px;
-            color: #667eea;
+            color: #FF5722;
             cursor: pointer;
             font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
         }
 
         .clear-ref:hover {
-            text-decoration: underline;
+            color: #D84315;
+            transform: scale(1.05);
+        }
+
+        /* 动物角色装饰 */
+        .character {
+            position: fixed;
+            font-size: 50px;
+            z-index: 0;
+            opacity: 0.6;
+            animation: bounce 2s ease-in-out infinite;
+        }
+        .char-1 { bottom: 20px; right: 5%; animation-delay: 0s; }
+        .char-2 { bottom: 20px; left: 5%; animation-delay: 0.5s; }
+        .char-3 { top: 15%; right: 3%; animation-delay: 1s; font-size: 40px; }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 600px) {
+            .character { display: none; }
+            body::before { opacity: 0.2; }
         }
 
     </style>
 </head>
 <body>
+    <!-- 云朵装饰 -->
+    <div class="cloud cloud-1"></div>
+    <div class="cloud cloud-2"></div>
+    <div class="cloud cloud-3"></div>
+    
+    <!-- 动物角色 -->
+    <div class="character char-1">🦁</div>
+    <div class="character char-2">🐘</div>
+    <div class="character char-3">🦒</div>
+
     <div class="container">
-        <h1>🍌 Nano Banana AI 图片生成</h1>
+        <h1>Nano Banana AI</h1>
+        <p class="subtitle">✨ 在疯狂动物城创造你的奇迹 ✨</p>
 
         <div class="form-group">
             <label>API Key *</label>
@@ -315,7 +513,7 @@
         <div class="form-group">
             <label>参考图片 (可选，最多3张)</label>
             <div class="upload-area" id="uploadArea">
-                <p>📷 点击或拖拽上传参考图片</p>
+                <p>🎨 点击或拖拽上传参考图片</p>
             </div>
             <input type="file" id="fileInput" accept="image/*" multiple>
             <div class="upload-hint" id="uploadHint"></div>
@@ -369,16 +567,16 @@
         const uploadArea = document.getElementById('uploadArea');
         uploadArea.addEventListener('dragover', (e) => {
             e.preventDefault();
-            uploadArea.style.borderColor = '#667eea';
+            uploadArea.style.borderColor = '#FF9800';
         });
 
         uploadArea.addEventListener('dragleave', () => {
-            uploadArea.style.borderColor = '#e0e0e0';
+            uploadArea.style.borderColor = '#A5D6A7';
         });
 
         uploadArea.addEventListener('drop', (e) => {
             e.preventDefault();
-            uploadArea.style.borderColor = '#e0e0e0';
+            uploadArea.style.borderColor = '#A5D6A7';
             const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
             handleMultipleImages(files);
         });
@@ -411,7 +609,7 @@
         // 更新预览
         function updatePreview() {
             if (referenceImages.length === 0) {
-                uploadArea.innerHTML = '<p>📷 点击或拖拽上传参考图片</p>';
+                uploadArea.innerHTML = '<p>🎨 点击或拖拽上传参考图片</p>';
                 uploadArea.classList.remove('has-image');
                 document.getElementById('clearRef').style.display = 'none';
                 document.getElementById('uploadHint').textContent = '';
